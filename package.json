@@ -18,6 +18,6 @@
     "url": "https://github.com/byteball/rpcify/issues"
   },
   "dependencies": {
-    "json-rpc2": "^1.0.2"
+    "json-rpc2": "git+https://github.com/trueshura/node-jsonrpc2#b44b40f3338f5b615cb4b04dea8f00341743062c"
   }
 }
