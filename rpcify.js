@@ -79,8 +79,13 @@ function expose(arg1, arg2, arg3){
 		throw Error('invalid args');
 }
 
+function exposeEvent(eventBus, event_name){
+	eventBus.on(event_name, function(...args){
+		server.broadcastToWS(event_name, args);
+	})
+}
 
-
+exports.exposeEvent = exposeEvent;
 exports.expose = expose;
 exports.listen = listen;
 

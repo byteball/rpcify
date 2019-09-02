@@ -12,8 +12,8 @@ npm install
 ```
 var rpcify = require('rpcify');
 
-var headlessWallet = require('headless-byteball');  // this is a module whose methods you want to expose via RPC
-var balances = require('byteballcore/balances.js'); // another such module
+var headlessWallet = require('headless-obyte');  // this is a module whose methods you want to expose via RPC
+var balances = require('ocore/balances.js'); // another such module
 
 // start listening on RPC port
 rpcify.listen(6333, '127.0.0.1');
@@ -64,3 +64,45 @@ rpcify.expose('func_name', func, bNoErrors);
 rpcify.expose({func1_name: func1, func2_name: func2}, bNoErrors);
 ```
 
+## Websocket & events
+
+RPC commands can be send through a websocket, in this case events can be exposed and notified to all open connections.
+
+```
+var rpcify = require('rpcify');
+
+var balances = require('ocore/balances.js'); // another such module
+var eventBus = require('ocore/event_bus.js'); 
+
+// start listening on RPC port
+rpcify.listen(6333, '127.0.0.1');
+
+// expose some functions 
+rpcify.expose(balances.readBalance, true);
+
+// expose some events 
+rpcify.exposeEvent(eventBus, "my_transactions_became_stable");
+rpcify.exposeEvent(eventBus, "new_my_transactions");
+
+```
+After this point, the above functions and events will become available via websocket interface. Example for Node.js client:
+```
+var WebSocket = require('ws');
+var ws  = new WebSocket("ws://127.0.0.1:6333");
+
+ws.on('open', function onWsOpen() {
+	console.log("ws open");
+	ws.send(JSON.stringify({"jsonrpc":"2.0", "id":1, "method":"readBalance", params:["LUTKZPUKQJDQMUUZAH4ULED6FSCA2FLI"]})); // send a command
+});
+
+ws.on('error', function onWsError(e){
+	console.log("websocket error"+e);
+})
+
+ws.on('message', function onWsMessage(message){ // JSON responses
+	console.error(message);
+	// {"jsonrpc":"2.0","result":{"base":{"stable":0,"pending":0}},"error":null,"id":1} // response to readBalance
+  // {"event":"my_transactions_became_stable","data":[["1pLZa3aVicNLE6vcClG2IvBe+tO0V7kDsxuzQCGlGuQ="]]} // event my_transactions_became_stable
+});
+
+```
