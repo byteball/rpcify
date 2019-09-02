@@ -92,7 +92,7 @@ var ws  = new WebSocket("ws://127.0.0.1:6333");
 
 ws.on('open', function onWsOpen() {
 	console.log("ws open");
-	ws.send(JSON.stringify({"jsonrpc":"2.0", "id":1, "method":"readBalance"})); // send a command
+	ws.send(JSON.stringify({"jsonrpc":"2.0", "id":1, "method":"readBalance", params:["LUTKZPUKQJDQMUUZAH4ULED6FSCA2FLI"]})); // send a command
 });
 
 ws.on('error', function onWsError(e){
@@ -101,10 +101,8 @@ ws.on('error', function onWsError(e){
 
 ws.on('message', function onWsMessage(message){ // JSON responses
 	console.error(message);
-	/*
-	* {"jsonrpc":"2.0","result":{"base":{"stable":0,"pending":0}},"error":null,"id":1}
-  * {"event":"my_transactions_became_stable","data":[["1pLZa3aVicNLE6vcClG2IvBe+tO0V7kDsxuzQCGlGuQ="]]}
-	*/
+	// {"jsonrpc":"2.0","result":{"base":{"stable":0,"pending":0}},"error":null,"id":1} // response to readBalance
+  // {"event":"my_transactions_became_stable","data":[["1pLZa3aVicNLE6vcClG2IvBe+tO0V7kDsxuzQCGlGuQ="]]} // event my_transactions_became_stable
 });
 
 ```
