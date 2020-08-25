@@ -4,7 +4,7 @@ This module allows to expose the functions of node.js modules via JSON-RPC, whic
 
 ## Install
 ```sh
-npm install
+npm install https://github.com/byteball/rpcify.git
 ```
 
 ## Usage
